@@ -1,0 +1,38 @@
+should i put 
+
+__pycache__/
+*.pyc
+.DS_Store
+/datasets/
+/outputs/
+*.csv
+.env
+
+or 
+
+# Python bytecode & cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Datasets & generated outputs (prevents uploading heavy files)
+data/
+outputs/
+*.csv
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# IDE & Editor settings
+.vscode/
+.idea/
