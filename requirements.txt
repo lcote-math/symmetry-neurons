@@ -1,0 +1,9 @@
+torch
+transformers>=4.50  # Gemma 3 support
+accelerate
+pillow
+pandas
+pyarrow
+numpy
+scipy
+matplotlib
