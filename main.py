@@ -4,7 +4,10 @@
 3. Zero out the parameters activated by --prune_dataset but not by --keep_dataset.
 4. Answer the --eval_datasets again with the pruned model.
 
-Run from the repository root: python main.py --help
+Run from the repository root:
+    python main.py              # 20 samples per dataset, as in the blog post
+    python main.py --n 100      # 100 samples per dataset
+    python main.py --help       # all options
 """
 
 import os
@@ -25,9 +28,10 @@ def main():
     os.makedirs(args.output_dir, exist_ok=True)
 
     # Dataset names are built on first use; csv paths are used as-is.
-    prune_label, prune_path = resolve(args.prune_dataset)
-    keep_label, keep_path = resolve(args.keep_dataset)
-    eval_sets = [resolve(d) for d in args.eval_datasets]
+    prune_label, prune_path = resolve(args.prune_dataset, args.n, args.seed)
+    keep_label, keep_path = resolve(args.keep_dataset, args.n, args.seed)
+    eval_sets = [resolve(d, args.n, args.seed) for d in args.eval_datasets]
+    print(f"Results will be saved to {args.output_dir}/")
 
     print(f"Loading model: {args.model_name}")
     model = AutoModelForImageTextToText.from_pretrained(

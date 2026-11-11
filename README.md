@@ -53,22 +53,24 @@ Click the **Open in Colab** badge above. The notebook walks through setup, build
 
 ```bash
 pip install -r requirements.txt
-python main.py                       # build missing datasets, profile, prune, evaluate
+python main.py                       # build missing datasets, profile, prune, evaluate (20 samples each)
+python main.py --n 100               # the same with 100 samples per dataset
+python main.py --n 100 --seed 1      # ... and a different random sample
 python main.py --help                # all options
 ```
 
 Run everything from the repository root. Gemma models are gated on Hugging Face: accept the license on the model page and log in with `huggingface-cli login` first. Gemma 3 12B in bfloat16 needs about 24 GB of GPU memory. For a quick test, use a smaller model such as `--model_name google/gemma-3-4b-it`.
 
-`main.py` writes one csv per evaluation dataset and stage to `outputs/` (for example `outputs/post_pruning_regular_c4.csv`). Each csv contains the model's full answer and the correct position. The `correct` column comes from a heuristic that takes the last position mentioned in the answer, so check the answers by hand before relying on it.
+`main.py` writes one csv per evaluation dataset and stage to `outputs/<model>_n<n>_seed<seed>/` (for example `outputs/gemma-3-12b-it_n20_seed42/post_pruning_regular_c4.csv`), so runs with different settings don't overwrite each other. Each csv contains the model's full answer and the correct position. The `correct` column comes from a heuristic that takes the last position mentioned in the answer, so check the answers by hand before relying on it.
 
 ### Datasets
 
 Datasets are built automatically the first time `main.py` needs them. You can also build them yourself:
 
 ```bash
-python -m src.make_datasets                         # list datasets and whether they are built
-python -m src.make_datasets regular_c4 irregular_c4 # build some
-python -m src.make_datasets all --force --n 50      # rebuild all with 50 samples each
+python -m src.make_datasets                         # list datasets and which sizes are built
+python -m src.make_datasets regular_c4 irregular_c4 # build some (20 samples each)
+python -m src.make_datasets all --n 100             # build all with 100 samples each
 ```
 
 | Name | Contents |
@@ -77,7 +79,7 @@ python -m src.make_datasets all --force --n 50      # rebuild all with 50 sample
 | `race` | high-school reading comprehension ([race](https://huggingface.co/datasets/race)) |
 | `regular_c4`, `irregular_c4` | the "spot the intruder" images described above |
 
-Sampling is seeded (default 20 samples, seed 42), so the same command produces the same datasets. The `--prune_dataset`, `--keep_dataset` and `--eval_datasets` options of `main.py` accept any of these names, or a path to your own csv. A csv needs a `question` column, and can have optional `article` (context) and `image_path` columns. To add a named dataset, write a builder function and register it in `DATASETS` in [src/make_datasets.py](src/make_datasets.py).
+Sampling is seeded (default 20 samples, seed 42), so the same command produces the same datasets. Each sample size and seed is stored in its own folder, `data/<name>_n<n>_seed<seed>/`. The `--prune_dataset`, `--keep_dataset` and `--eval_datasets` options of `main.py` accept any of these names, or a path to your own csv. A csv needs a `question` column, and can have optional `article` (context) and `image_path` columns. To add a named dataset, write a builder function and register it in `DATASETS` in [src/make_datasets.py](src/make_datasets.py).
 
 ## Code layout
 

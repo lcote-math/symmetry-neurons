@@ -1,5 +1,7 @@
 import argparse
 
+from src.make_datasets import DEFAULT_N, DEFAULT_SEED
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -13,9 +15,17 @@ def parse_args():
                         help="parameters also activated by this dataset are kept (name or csv path)")
     parser.add_argument("--eval_datasets", type=str, nargs="+", default=["regular_c4", "irregular_c4"],
                         help="datasets to answer before and after pruning (names or csv paths)")
+    parser.add_argument("--n", type=int, default=DEFAULT_N,
+                        help=f"samples per named dataset (default: {DEFAULT_N}); ignored for csv paths")
+    parser.add_argument("--seed", type=int, default=DEFAULT_SEED,
+                        help=f"seed for sampling and image generation (default: {DEFAULT_SEED})")
     parser.add_argument("--r", type=float, default=0.05,
                         help="fraction of each layer's weights counted as activated by a dataset")
-    parser.add_argument("--output_dir", type=str, default="outputs")
+    parser.add_argument("--output_dir", type=str, default=None,
+                        help="default: outputs/<model>_n<n>_seed<seed>")
     parser.add_argument("--batch_size", type=int, default=8, help="batch size for forward passes and generation")
     parser.add_argument("--max_new_tokens", type=int, default=1024)
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.output_dir is None:
+        args.output_dir = f"outputs/{args.model_name.split('/')[-1]}_n{args.n}_seed{args.seed}"
+    return args
