@@ -75,7 +75,6 @@ python -m src.make_datasets all --force --n 50      # rebuild all with 50 sample
 |---|---|
 | `gsm8k` | grade-school math word problems ([openai/gsm8k](https://huggingface.co/datasets/openai/gsm8k)) |
 | `race` | high-school reading comprehension ([race](https://huggingface.co/datasets/race)) |
-| `linear_algebra` | true/false linear algebra questions ([data/custom_datasets/LA_2026.csv](data/custom_datasets/LA_2026.csv)) |
 | `regular_c4`, `irregular_c4` | the "spot the intruder" images described above |
 
 Sampling is seeded (default 20 samples, seed 42), so the same command produces the same datasets. The `--prune_dataset`, `--keep_dataset` and `--eval_datasets` options of `main.py` accept any of these names, or a path to your own csv. A csv needs a `question` column, and can have optional `article` (context) and `image_path` columns. To add a named dataset, write a builder function and register it in `DATASETS` in [src/make_datasets.py](src/make_datasets.py).

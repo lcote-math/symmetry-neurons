@@ -19,3 +19,4 @@ outputs/
 Thumbs.db
 .vscode/
 .idea/
+data/custom_datasets/LA_2026.csv
